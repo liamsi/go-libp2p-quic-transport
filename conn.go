@@ -28,7 +28,7 @@ type conn struct {
 var _ tpt.CapableConn = &conn{}
 
 func (c *conn) Close() error {
-	return c.sess.Close()
+	return c.sess.CloseWithError(0, "")
 }
 
 // IsClosed returns whether a connection is fully closed.
@@ -37,8 +37,8 @@ func (c *conn) IsClosed() bool {
 }
 
 // OpenStream creates a new stream.
-func (c *conn) OpenStream() (mux.MuxedStream, error) {
-	qstr, err := c.sess.OpenStreamSync(context.Background())
+func (c *conn) OpenStream(ctx context.Context) (mux.MuxedStream, error) {
+	qstr, err := c.sess.OpenStreamSync(ctx)
 	return &stream{Stream: qstr}, err
 }
 
